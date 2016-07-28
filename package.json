@@ -1,0 +1,22 @@
+{
+  "name": "frites",
+  "version": "1.0.0",
+  "description": "fritesnmeats",
+  "main": "index.js",
+  "engines": {
+    "node": "6.2.0"
+  },
+  "scripts": {
+    "start": "node index"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^0.8.7",
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "moment": "^2.14.1",
+    "moment-timezone": "^0.5.5",
+    "nodemailer": "^2.5.0"
+  }
+}
