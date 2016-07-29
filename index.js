@@ -19,28 +19,26 @@ const smtpConfig = {
   }
 };
 
-const transporter = mailer.createTransport(smtpConfig);
 const mailOpts = {
   from: process.env.MY_EMAIL,
   to: process.env.PHONE_NUMBER,
   subject: 'Food Order',
 };
 
+const transporter = mailer.createTransport(smtpConfig);
 
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 app.post('/', urlencodedParser, function(req, resp) {
-  const reqBody = req.body;
-  const reqToken = reqBody.token;
-  if (!bcrypt.compareSync(reqToken, TOKEN)) {
+  const { body, token, text } = req.body;
+
+  if (!bcrypt.compareSync(token, TOKEN)) {
     return resp.status(400).send("UNAUTHORIZED_TOKEN");
   }
 
   if (moment.tz('America/New_York').format('dddd') !== 'Thursday') {
     return resp.status(400).send("You can only order on Thursdays :(");
   }
-
-  const text = reqBody.text;
 
   try {
     const peopleOrdering = text.slice(6).split(',').map(person => person.trim());
@@ -61,5 +59,5 @@ app.post('/', urlencodedParser, function(req, resp) {
   }
 });
 
-
-app.listen(port)
+app.listen(port);
+console.log(`server started on ${port}`);
