@@ -20,7 +20,7 @@ app.post('/', urlencodedParser, function(req, resp) {
     return resp.status(400).send("UNAUTHORIZED_TOKEN");
   }
 
-  if (moment.tz('America/New_York').format('dddd') !== 'Thursday') {
+  if (moment.tz('America/New_York').format('dddd') !== 'Thursday' && process.env.FORCE_ORDER !== 'true') {
     return resp.status(400).send("You can only order on Thursdays :(");
   }
 
