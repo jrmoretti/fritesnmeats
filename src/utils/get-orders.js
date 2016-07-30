@@ -5,8 +5,10 @@ module.exports = function() {
   try {
     ORDERS = require('./constants');
   } catch(e) {
-    console.log(e)
-    fs.writeFileSync(`${__dirname}/constants.js`, `module.exports = ${JSON.stringify({})};`);
+    console.log(e);
+    const destination = `${__dirname}/constants.js`;
+    const content = `module.exports = ${JSON.stringify({})};`;
+    fs.writeFileSync(destination, content);
   }
 
   return ORDERS;

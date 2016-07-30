@@ -20,7 +20,6 @@ const mailOpts = {
 
 const transporter = mailer.createTransport(smtpConfig);
 
-
 module.exports = function(userName, order, orderInfo, resp) {
   switch (order) {
     case 'addOrder':
@@ -35,17 +34,23 @@ module.exports = function(userName, order, orderInfo, resp) {
 }
 
 function addOrder (userName, orderInfo, resp) {
-  ORDERS[userName] = orderInfo;
-  const updatedFile = `module.exports = ${JSON.stringify(ORDERS, null, 2)};`;
-  fs.writeFileSync(`${__dirname}/constants.js`, updatedFile);
+  ORDERS[userName] = {
+    orderInfo,
+    ordered: false
+  };
+  updateOrders();
   resp.status(200).send('Success. You can now make an order with `/fritesnmeats order`');
 }
 
 
 function makeOrder(userName, resp) {
-  const order = ORDERS[userName];
+  const order = ORDERS[userName] && ORDERS[userName].orderInfo;
   if (!order) {
     return resp.status(400).send('You must first register an order with /fritesnmeats addOrder [order]');
+  }
+
+  if (ORDERS[userName].ordered) {
+    return resp.status(400).send('You already made an order today');
   }
 
   mailOpts.text = order;
@@ -54,22 +59,18 @@ function makeOrder(userName, resp) {
       console.log('Error: ', err);
       resp.status(400).send('Could not make order :(');
     } else {
+      ORDERS[userName].ordered = true;
       resp.status(200).send(`You just ordered ${order}`);
+      updateOrders();
     }
   });
 }
 
 function makeMultipleOrders(peopleOrdering, resp) {
-  const allOrders = peopleOrdering.map(order => ORDERS[order]).filter(order => order);
-  const ordersFor = Object.keys(ORDERS).filter(person => peopleOrdering.some(peep => peep == person));
-  mailOpts.text = allOrders.join(', ');
-  transporter.sendMail(mailOpts, function(err, info) {
-    if (err) {
-      console.log('Error: ', err);
-      resp.status(400).send('Could not make order :(');
-    } else {
-      console.log('email sent', info);
-      resp.status(200).send(`order sent for ${ordersFor.join(', ')}`);
-    }
-  });
+  return resp.status(400).send('Not yet supported');
+}
+
+function updateOrders() {
+  const updatedFile = `module.exports = ${JSON.stringify(ORDERS, null, 2)};`;
+  fs.writeFileSync(`${__dirname}/constants.js`, updatedFile);
 }
