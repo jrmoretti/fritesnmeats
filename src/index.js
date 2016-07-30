@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const moment = require('moment-timezone');
 
-const parseSlackMessage = require('./utils/parse-slack-message');
 const validateOrder = require('./utils/validate-order');
 const processOrder = require('./utils/process-order');
 const TOKEN = '$2a$10$PaERCPVrl6/iKl1SceAOMuWgOvnJYXIXl.0iCy1W95E7jNQylxXEK';

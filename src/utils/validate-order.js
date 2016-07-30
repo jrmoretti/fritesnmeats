@@ -1,4 +1,4 @@
-const VALID_ORDERS = ['addOrder', 'order', 'orderFor'];
+const VALID_ORDERS = ['addOrder', 'order', 'orderFor', 'alias'];
 
 module.exports = function(order) {
   if (VALID_ORDERS.includes(order)) {

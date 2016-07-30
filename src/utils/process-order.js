@@ -28,16 +28,25 @@ module.exports = function(userName, order, orderInfo, resp) {
       return makeOrder(userName, resp);
     case 'orderFor':
       return makeMultipleOrders(orderInfo, resp);
+    case 'alias':
+      return makeAlias(userName, orderInfo, resp);
     default:
       throw new Error(`unknown order: ${order}`);
   }
 }
 
 function addOrder (userName, orderInfo, resp) {
-  ORDERS[userName] = {
-    orderInfo,
-    ordered: false
-  };
+  const userExists = ORDERS[userName];
+
+  if (userExists) {
+    ORDERS[userName].orderInfo = orderInfo
+  } else {
+    ORDERS[userName] = {
+      orderInfo,
+      ordered: false
+    }
+  }
+
   updateOrders();
   resp.status(200).send('Success. You can now make an order with `/fritesnmeats order`');
 }
@@ -54,6 +63,7 @@ function makeOrder(userName, resp) {
   }
 
   mailOpts.text = order;
+  mailOpts.subject = `Food Order for ${ORDERS[userName].alias || userName}`;
   transporter.sendMail(mailOpts, function(err, info) {
     if (err) {
       console.log('Error: ', err);
@@ -64,6 +74,16 @@ function makeOrder(userName, resp) {
       updateOrders();
     }
   });
+}
+
+function makeAlias(userName, alias, resp) {
+  if (!ORDERS[userName]) {
+    return resp.status(400).send('You need to create an order first with /fritesnmeats addOrder');
+  }
+
+  ORDERS[userName].alias = alias;
+  resp.status(200).send(`Your order will now be sent as ${alias}`);
+  updateOrders();
 }
 
 function makeMultipleOrders(peopleOrdering, resp) {
