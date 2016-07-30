@@ -1,4 +1,4 @@
-const ORDERS = require('./constants');
+const ORDERS = require(`${__dirname}/constants`);
 const fs = require('fs');
 
 Object.keys(ORDERS).forEach(user => {
