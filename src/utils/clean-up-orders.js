@@ -1,4 +1,5 @@
 const ORDERS = require('./constants');
+const fs = require('fs');
 
 Object.keys(ORDERS).forEach(user => {
   const usersOrder = ORDERS[user];
