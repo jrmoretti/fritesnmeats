@@ -5,7 +5,7 @@ module.exports = function() {
   try {
     ORDERS = require('./constants');
   } catch(e) {
-    console.log(e);
+    console.log('Creating constants file');
     const destination = `${__dirname}/constants.js`;
     const content = `module.exports = ${JSON.stringify({})};`;
     fs.writeFileSync(destination, content);

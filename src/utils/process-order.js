@@ -1,6 +1,7 @@
 const ORDERS = require('./get-orders')();
 const fs = require('fs');
 const mailer = require('nodemailer');
+const moment = require('moment-timezone');
 
 const smtpConfig = {
   host: 'smtp.gmail.com',
@@ -39,12 +40,9 @@ function addOrder (userName, orderInfo, resp) {
   const userExists = ORDERS[userName];
 
   if (userExists) {
-    ORDERS[userName].orderInfo = orderInfo
+    ORDERS[userName].orderInfo = orderInfo;
   } else {
-    ORDERS[userName] = {
-      orderInfo,
-      ordered: false
-    }
+    ORDERS[userName] = { orderInfo };
   }
 
   updateOrders();
@@ -58,7 +56,12 @@ function makeOrder(userName, resp) {
     return resp.status(400).send('You must first register an order with /fritesnmeats addOrder [order]');
   }
 
-  if (ORDERS[userName].ordered) {
+  const lastOrdered = ORDERS[userName].ordered;
+  const lastOrderedMoment = lastOrdered && moment.tz(lastOrdered, 'America/New_York');
+  const today = moment.tz('America/New_York');
+  const userOrderedToday = lastOrderedMoment && today.diff(lastOrderedMoment, 'days') === 0;
+
+  if (userOrderedToday) {
     return resp.status(400).send('You already made an order today');
   }
 
@@ -69,7 +72,7 @@ function makeOrder(userName, resp) {
       console.log('Error: ', err);
       resp.status(400).send('Could not make order :(');
     } else {
-      ORDERS[userName].ordered = true;
+      ORDERS[userName].ordered = moment.tz('America/New_York').format('YYYY-MM-DD');
       resp.status(200).send(`You just ordered ${order}`);
       updateOrders();
     }
