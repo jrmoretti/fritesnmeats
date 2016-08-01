@@ -10,6 +10,4 @@
 
 | Command                                                    | Description                                                                                | Example                                        
 |------------------------------------------------------------|--------------------------------------------------------------------------------------------|------------------------------------------------
-| /fritesnmeats [orderFor] [comma separated users/aliases]   | Will match predefined orders based on people's orders                                      | /fritesnmeats order marwan, fernando, owen     
-| /fritesnmeats [BOTW]                                       | Sends back burger of the week.                                                             | /fritenmeats BOTW                               
-| /fritesnmeats [users]                                      | sends back all registered users so you can order for them                                  | /fritenmeats users                               
+| /fritesnmeats [BOTW]                                       | Sends back burger of the week.                                                             | /fritenmeats BOTW                                

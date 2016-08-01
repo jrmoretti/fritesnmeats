@@ -34,5 +34,9 @@ app.post('/', urlencodedParser, function(req, resp) {
   }
 });
 
+app.get('/', function(req, resp) {
+  return resp.status(200).send('Welcome to fritesnmeats slack integration');
+})
+
 app.listen(port);
 console.log(`server started on ${port}`);

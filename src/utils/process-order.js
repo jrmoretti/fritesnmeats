@@ -27,8 +27,6 @@ module.exports = function(userName, order, orderInfo, resp) {
       return addOrder(userName, orderInfo, resp);
     case 'order':
       return makeOrder(userName, resp);
-    case 'orderFor':
-      return makeMultipleOrders(orderInfo, resp);
     case 'alias':
       return makeAlias(userName, orderInfo, resp);
     default:
@@ -87,10 +85,6 @@ function makeAlias(userName, alias, resp) {
   ORDERS[userName].alias = alias;
   resp.status(200).send(`Your order will now be sent as ${alias}`);
   updateOrders();
-}
-
-function makeMultipleOrders(peopleOrdering, resp) {
-  return resp.status(400).send('Not yet supported');
 }
 
 function updateOrders() {
